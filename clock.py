@@ -410,7 +410,6 @@ class ScreenManager:
             img = self.ConstructClockFace(now.strftime('%H%M'), show_wifi)
 
             #DrawToEInk(img)
-            self.partialUpdateCount
             if self.partialUpdateCount < 9 or asyncUpdate:
                 self.epd.init_part()
                 self.epd.display_Partial(self.epd.getbuffer(img), 0, 0, self.epd.width, self.epd.height)
@@ -422,7 +421,7 @@ class ScreenManager:
                 self.partialUpdateCount = 0
             self.epd.sleep()
 
-            if now >= self.nextDisplayedTime:
+            while now >= self.nextDisplayedTime:
                 self.lastDisplayedTime = self.nextDisplayedTime
                 self.nextDisplayedTime += self.timeDisplayIncrement
         
