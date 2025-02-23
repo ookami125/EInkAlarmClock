@@ -23,19 +23,11 @@ import vlc
 
 load_dotenv()
 
-def is_raspberrypi():
-    try:
-        with io.open('/sys/firmware/devicetree/base/model', 'r') as m:
-            if 'raspberry pi' in m.read().lower(): return True
-    except Exception: pass
-    return False
-
-if is_raspberrypi():
-    libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
-    if os.path.exists(libdir):
-        sys.path.append(libdir)
-    from waveshare_epd import epd7in5_V2
-    from gpiozero import Button
+libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
+if os.path.exists(libdir):
+    sys.path.append(libdir)
+from waveshare_epd import epd7in5_V2
+from gpiozero import Button
 
 subscribers = {}
 class MsgQueue:
