@@ -289,13 +289,13 @@ class ButtonManager:
     eventQueue = None
 
     def __init__(self):
-        self.button26 = Button(26, bounce_time=0.1)
-        self.button26.when_pressed = partial(self.on_press, "SilenceAlarm")
-        self.button26.when_released = partial(self.on_release, "SilenceAlarm")
+        self.button27 = Button(27, bounce_time=0.1)
+        self.button27.when_pressed = partial(self.on_press, "SilenceAlarm")
+        self.button27.when_released = partial(self.on_release, "SilenceAlarm")
 
-        self.button13 = Button(13, bounce_time=0.1)
-        self.button13.when_pressed = partial(self.on_press, "RequestCalendarUpdate")
-        self.button13.when_released = partial(self.on_release, "RequestCalendarUpdate")
+        self.button22 = Button(22, bounce_time=0.1)
+        self.button22.when_pressed = partial(self.on_press, "RequestCalendarUpdate")
+        self.button22.when_released = partial(self.on_release, "RequestCalendarUpdate")
         
         self.eventQueue = MsgQueue("ButtonManager")
 
