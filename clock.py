@@ -8,13 +8,6 @@ from functools import partial
 
 from collections import deque
 
-libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
-if os.path.exists(libdir):
-   sys.path.append(libdir)
-from waveshare_epd import epd7in5_V2
-
-from gpiozero import Button
-
 from dotenv import load_dotenv
 
 import time
@@ -29,6 +22,20 @@ import netifaces
 import vlc
 
 load_dotenv()
+
+def is_raspberrypi():
+    try:
+        with io.open('/sys/firmware/devicetree/base/model', 'r') as m:
+            if 'raspberry pi' in m.read().lower(): return True
+    except Exception: pass
+    return False
+
+if is_raspberrypi():
+    libdir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'lib')
+    if os.path.exists(libdir):
+        sys.path.append(libdir)
+    from waveshare_epd import epd7in5_V2
+    from gpiozero import Button
 
 subscribers = {}
 class MsgQueue:
@@ -227,21 +234,21 @@ class AlarmManager:
     def start(self):
         self.playing = True
         self.eventQueue.pub("Radio", "On")
-        self.current_volume = 0
-        self.mediaplayer.pause()
-        self.mediaplayer.audio_set_volume(self.current_volume)
         self.mediaplayer.play()
 
     def stop(self):
         self.playing = False
         self.songName = None
         self.eventQueue.pub("Radio", "Off")
+        self.current_volume = 0
+        self.mediaplayer.audio_set_volume(self.current_volume)
+        time.sleep(1)
         self.mediaplayer.stop()
 
     def update(self):
         now = datetime.now().astimezone()
 
-        if self.current_volume < 100:
+        if self.playing and self.current_volume < 100:
             self.current_volume += 1
             self.mediaplayer.audio_set_volume(self.current_volume)
         
@@ -269,6 +276,7 @@ class AlarmManager:
                 self.stop()
             else:
                 self.start()
+                time.sleep(1)
                 self.current_volume = 100
                 self.mediaplayer.audio_set_volume(self.current_volume)
                 
